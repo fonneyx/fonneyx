@@ -12,10 +12,10 @@
 
 <br>
 
-**`01`**&ensp; **[Autonomous Drone Vision](https://github.com/fonneyx/Autonomous-Drone-Vision)**
+**`01`**&ensp; **[Autonomous Drone Vision](https://github.com/fonneyx/Autonomous-Drone-Vision)**<br>
 A drone that follows its operator, steered by hand gestures and voice. Its obstacle pilot, trained with PPO in MuJoCo, clears a 40-obstacle course 99% of the time.
 
-**`02`**&ensp; **[Aio](https://github.com/fonneyx/Aio)**
+**`02`**&ensp; **[Aio](https://github.com/fonneyx/Aio)**<br>
 One downloader for every media site: a Python library, a CLI and a self-hosted web app.&ensp;`pip install aio-grab`
 
 <br>
