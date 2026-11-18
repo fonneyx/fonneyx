@@ -19,32 +19,28 @@ W, H = 1200, 380
 HORIZON = 214                # baseline of the wordmark = horizon of the ground plane
 STEP = 8                     # dot grid pitch
 R_MAX = 3.3                  # letter dot radius
-WORD, MARK = "fonneyx", "."
+WORD = "fonneyx"
 FONT = "C:/Windows/Fonts/seguibl.ttf"
 SS = 4                       # supersampling for coverage
 
 THEMES = {
-    "dark": dict(ink="#E6EDF3", accent="#FF453A"),
-    "light": dict(ink="#1F2328", accent="#E5321F"),
+    "dark": dict(ink="#E6EDF3"),
+    "light": dict(ink="#1F2328"),
 }
 
 
-def coverage_masks():
-    """Return (word_mask, mark_mask) as L images at W x H with anti-aliased coverage."""
+def coverage_mask():
+    """Return the wordmark as an L image at W x H with anti-aliased coverage."""
     font = ImageFont.truetype(FONT, 205 * SS)
     ascent = font.getmetrics()[0]
     big = (W * SS, H * SS)
-    word_img, mark_img = Image.new("L", big, 0), Image.new("L", big, 0)
-    dw, dm = ImageDraw.Draw(word_img), ImageDraw.Draw(mark_img)
-    wb = dw.textbbox((0, 0), WORD, font=font)
-    mb = dm.textbbox((0, 0), MARK, font=font)
-    gap = 6 * SS
-    total = (wb[2] - wb[0]) + gap + (mb[2] - mb[0])
-    x0 = (big[0] - total) // 2 - wb[0]
+    word_img = Image.new("L", big, 0)
+    draw = ImageDraw.Draw(word_img)
+    wb = draw.textbbox((0, 0), WORD, font=font)
+    x0 = (big[0] - (wb[2] - wb[0])) // 2 - wb[0]
     y0 = HORIZON * SS - ascent                          # letters stand on the plane
-    dw.text((x0, y0), WORD, font=font, fill=255)
-    dm.text((x0 + wb[2] + gap, y0), MARK, font=font, fill=255)
-    return word_img.resize((W, H), Image.BOX), mark_img.resize((W, H), Image.BOX)
+    draw.text((x0, y0), WORD, font=font, fill=255)
+    return word_img.resize((W, H), Image.BOX)
 
 
 def cov(img, x, y):
@@ -56,14 +52,12 @@ def cov(img, x, y):
 
 
 def build(theme):
-    word, mark = coverage_masks()
+    word = coverage_mask()
     letters = []
     for gx in range(STEP // 2, W, STEP):
         for gy in range(STEP // 2, H, STEP):
-            cm, cw = cov(mark, gx, gy), cov(word, gx, gy)
-            if cm > 0.12:
-                letters.append(f'<circle cx="{gx}" cy="{gy}" r="{R_MAX*math.sqrt(cm):.2f}" fill="{theme["accent"]}"/>')
-            elif cw > 0.12:
+            cw = cov(word, gx, gy)
+            if cw > 0.12:
                 letters.append(f'<circle cx="{gx}" cy="{gy}" r="{R_MAX*math.sqrt(cw):.2f}"/>')
 
     # Ground plane: points on a 3D grid projected through a pinhole camera.
