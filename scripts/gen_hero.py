@@ -100,5 +100,5 @@ def build(theme):
 
 for name, theme in THEMES.items():
     svg = build(theme)
-    (OUT / f"hero-{name}.svg").write_text(svg, encoding="utf-8")
+    (OUT / f"fonneyx-{name}.svg").write_text(svg, encoding="utf-8")
     print(name, f"{len(svg)/1024:.0f} KB")
