@@ -124,7 +124,7 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     for name, ink in THEMES.items():
         svg = stage(word, ink, args.seed, args.freeze)
-        (out / f"fonneyx-{name}.svg").write_text(svg, encoding="utf-8")
+        (out / f"swarm-{name}.svg").write_text(svg, encoding="utf-8")
         print(f"{name}: {len(svg) / 1024:.0f} KB")
 
 
